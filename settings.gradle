@@ -1,0 +1,3 @@
+rootProject.name='VideoAndImagePlayer'
+include ':app'
+include ':viewcycle'
