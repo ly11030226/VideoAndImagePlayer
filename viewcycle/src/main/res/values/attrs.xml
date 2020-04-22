@@ -3,7 +3,7 @@
     <declare-styleable name="MyViewCycle">
         <attr name="android:layout_width"></attr>
         <attr name="android:layout_height"></attr>
-        <attr name="imageStayTime" format="dimension"></attr>
+        <attr name="imageStayTime" format="integer"></attr>
 
     </declare-styleable>
 </resources>
