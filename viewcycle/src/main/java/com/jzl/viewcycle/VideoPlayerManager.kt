@@ -10,18 +10,20 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 class VideoPlayerManager {
 
-    /**
-     * 初始化操作
-     */
-    fun init(){
-        //开启EXO模式
-        PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
-        //ijk关闭log
-        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT)
-        //切换渲染模式
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL)
-    }
+
     companion object{
+        /**
+         * 初始化操作
+         */
+        fun init(){
+            //开启EXO模式
+            PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
+            //ijk关闭log
+            IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT)
+            //切换渲染模式
+            GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL)
+        }
+
         fun setPlayerManager(playManager: Class<out IPlayerManager>){
             PlayerFactory.setPlayManager(playManager)
         }
