@@ -140,8 +140,7 @@ class MyViewCycle : RecyclerView {
     private fun playVideo(scrollHelper: ScrollHelper, pos: Int) {
         var mGSYBaseVideoPlayer =
             mLinearLayoutManager.getChildAt(0)?.findViewById<GSYBaseVideoPlayer>(
-                R
-                    .id.video_player
+                R.id.video_player
             )
         var visiableState = mGSYBaseVideoPlayer!!.visibility
         if (visiableState == View.VISIBLE) {
