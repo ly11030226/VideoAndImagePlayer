@@ -10,7 +10,7 @@
         android:id="@+id/mvc"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:imageStayTime="2"
+        app:imageStayTime="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"

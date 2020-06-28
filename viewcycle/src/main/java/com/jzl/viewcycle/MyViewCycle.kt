@@ -1,8 +1,6 @@
 package com.jzl.viewcycle
-
 import android.app.Activity
 import android.content.Context
-import android.content.res.TypedArray
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -29,7 +27,7 @@ class MyViewCycle : RecyclerView {
         const val TAG = "MyViewCycle"
         const val DEFAULT_WIDTH = 1920F
         const val DEFAULT_HEIGHT = 1080F
-        const val DEFAULT_STAY_TIME = 10 * 1000
+        const val DEFAULT_STAY_TIME = 10
         const val AUTO_PLAY: Int = 0x11
         const val FIRST_IS_IMAGE_PLAY = 0x12
         const val TYPE_MP4 = ".mp4"
@@ -50,7 +48,7 @@ class MyViewCycle : RecyclerView {
      */
     private var mImageStayTime: Int = DEFAULT_STAY_TIME
 
-    private lateinit var mAdapter: RecyclerNormalAdapter
+    private var mAdapter: RecyclerNormalAdapter? = null
     private lateinit var mLinearLayoutManager: LinearLayoutManager
     private lateinit var mScrollHelper: ScrollHelper
     private lateinit var mHandler: MyHandler
@@ -73,7 +71,7 @@ class MyViewCycle : RecyclerView {
             typedArray.getDimension(R.styleable.MyViewCycle_android_layout_width, DEFAULT_WIDTH)
         mHeihgt =
             typedArray.getDimension(R.styleable.MyViewCycle_android_layout_height, DEFAULT_HEIGHT)
-        mImageStayTime = typedArray.getInt(R.styleable.MyViewCycle_imageStayTime, DEFAULT_STAY_TIME)
+        mImageStayTime = typedArray.getInt(R.styleable.MyViewCycle_imageStayTime, DEFAULT_STAY_TIME) * 1000
         typedArray.recycle()
     }
 
@@ -92,9 +90,7 @@ class MyViewCycle : RecyclerView {
             mDataList.clear()
             mDataList.addAll(list)
         }
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged()
-        }
+        mAdapter?.notifyDataSetChanged()
     }
 
     private fun initRecyclerView() {
@@ -109,7 +105,7 @@ class MyViewCycle : RecyclerView {
 
     private fun initData(showImageMode:ShowImageMode?) {
         mAdapter = RecyclerNormalAdapter(context, mDataList, MyPlayCompleteCallBack(this), mHandler)
-        mAdapter.addShowImageModeCallback(showImageMode)
+        mAdapter?.addShowImageModeCallback(showImageMode)
         adapter = mAdapter
         //自助播放类
         this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -126,7 +122,7 @@ class MyViewCycle : RecyclerView {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 try {
                     Log.i(TAG, "onScrollStateChanged")
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE && firstVisibleItem == lastVisibleItem) {
+                    if (newState == SCROLL_STATE_IDLE && firstVisibleItem == lastVisibleItem) {
                         mHandler.removeMessages(AUTO_PLAY)
                         playVideo(mScrollHelper, firstVisibleItem)
                     }
@@ -138,11 +134,11 @@ class MyViewCycle : RecyclerView {
     }
 
     private fun playVideo(scrollHelper: ScrollHelper, pos: Int) {
-        var mGSYBaseVideoPlayer =
+        val mGSYBaseVideoPlayer =
             mLinearLayoutManager.getChildAt(0)?.findViewById<GSYBaseVideoPlayer>(
                 R.id.video_player
             )
-        var visiableState = mGSYBaseVideoPlayer!!.visibility
+        val visiableState = mGSYBaseVideoPlayer!!.visibility
         if (visiableState == View.VISIBLE) {
             scrollHelper.handleHavePagerSnapHelper(mGSYBaseVideoPlayer)
         } else {
@@ -157,7 +153,7 @@ class MyViewCycle : RecyclerView {
 
     private fun releaseVideoAndNotify() {
         GSYVideoManager.releaseAllVideos()
-        mAdapter.notifyDataSetChanged()
+        mAdapter?.notifyDataSetChanged()
     }
 
     fun onResume() {
@@ -180,13 +176,13 @@ class MyViewCycle : RecyclerView {
         fun getUrlAndImageView(url: String, iv: ImageView) {}
     }
 
-    class MyPlayCompleteCallBack(var myViewCycle: MyViewCycle) : PlayCompleteCallBack {
+    class MyPlayCompleteCallBack(private var myViewCycle: MyViewCycle) : PlayCompleteCallBack {
         override fun playComplete(pos: Int) {
             myViewCycle.smoothScrollToPosition(pos + 1)
         }
     }
 
-    class MyHandler(var myViewCycle: MyViewCycle, activity: Activity) :
+    class MyHandler(private var myViewCycle: MyViewCycle, activity: Activity) :
         Handler(Looper.getMainLooper()) {
         private val a: WeakReference<Activity> = WeakReference(activity)
 
@@ -203,10 +199,10 @@ class MyViewCycle : RecyclerView {
                 }
                 FIRST_IS_IMAGE_PLAY -> {
                     Log.i(TAG, "receive FIRST_IS_IMAGE_PLAY")
-                    val msg = Message()
-                    msg.what = AUTO_PLAY
-                    msg.obj = 0
-                    sendMessageDelayed(msg, myViewCycle.mImageStayTime.toLong())
+                    val mMessage = Message()
+                    mMessage.what = AUTO_PLAY
+                    mMessage.obj = 0
+                    sendMessageDelayed(mMessage, myViewCycle.mImageStayTime.toLong())
                 }
                 else -> {
                 }
