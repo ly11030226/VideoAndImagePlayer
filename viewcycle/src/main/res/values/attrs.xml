@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MyViewCycle">
-        <attr name="android:layout_width"></attr>
-        <attr name="android:layout_height"></attr>
-        <attr name="imageStayTime" format="integer"></attr>
-
+        <attr name="imageStayTime" format="integer"/>
     </declare-styleable>
 </resources>

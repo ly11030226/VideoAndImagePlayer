@@ -25,23 +25,12 @@ class MyViewCycle : RecyclerView {
 
     companion object {
         const val TAG = "MyViewCycle"
-        const val DEFAULT_WIDTH = 1920F
-        const val DEFAULT_HEIGHT = 1080F
         const val DEFAULT_STAY_TIME = 10
         const val AUTO_PLAY: Int = 0x11
         const val FIRST_IS_IMAGE_PLAY = 0x12
         const val TYPE_MP4 = ".mp4"
     }
 
-    /**
-     * 宽度
-     */
-    private var mWidth = 0f
-
-    /**
-     * 高度
-     */
-    private var mHeihgt = 0f
 
     /**
      * 图片停留时长
@@ -67,10 +56,6 @@ class MyViewCycle : RecyclerView {
         defStyleAttr
     ) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyViewCycle)
-        mWidth =
-            typedArray.getDimension(R.styleable.MyViewCycle_android_layout_width, DEFAULT_WIDTH)
-        mHeihgt =
-            typedArray.getDimension(R.styleable.MyViewCycle_android_layout_height, DEFAULT_HEIGHT)
         mImageStayTime = typedArray.getInt(R.styleable.MyViewCycle_imageStayTime, DEFAULT_STAY_TIME) * 1000
         typedArray.recycle()
     }
